@@ -1,0 +1,54 @@
+.l-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.l-wrapper {
+    width: 300px;
+    padding: 0 20px 10px;
+    box-shadow: 1px -1px 14px 0px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 1px -1px 14px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 1px -1px 14px 0px rgba(0,0,0,0.5);
+}
+
+.l-title {
+    font-size: 26px;
+    font-weight: 300;
+}
+
+.l-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.l-input {
+    flex: 1;
+    min-width: 40%;
+    padding: 10px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
+.l-button {
+    width: 40%;
+    padding: 10px 15px;
+    border: none;
+    background-color: #1c54b2;
+    color: white;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+.con {
+    font-size: 12px;
+    margin: 5px 0;
+    text-decoration: underline;
+    cursor: pointer;
+}
