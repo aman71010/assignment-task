@@ -1,4 +1,13 @@
+import * as React from 'react';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { BASE_URL } from '../requestMethods';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={4} ref={ref} variant="filled" {...props} />;
+});
 
 const AddUser = () => {
 
@@ -7,10 +16,25 @@ const AddUser = () => {
         number: '',
         email: '',
         address: '',
+        password: '',
     });
 
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
+
+    const [open, setOpen] = useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+    const TOKEN = JSON.parse(localStorage.getItem("profile"))?.accessToken;
+    const userRequest = axios.create({
+        baseURL:  BASE_URL,
+        headers:  {token: `Bearer ${TOKEN}`}
+    });
 
     const inputHandler = (e) => {
         setFormValues({
@@ -24,6 +48,24 @@ const AddUser = () => {
         setFormErrors(validate(formValues));
         setIsSubmit(true);
     };
+
+    useEffect( () => {
+
+        const addUser = async () => {
+            if(Object.keys(formErrors).length === 0 && isSubmit === true){
+                try{
+                    const res = await userRequest.post("/user/adduser", formValues);
+                    if(res){
+                        setOpen(true);
+                        //console.log("user added successfully");
+                    }
+                } catch(err){
+                    console.log(err);
+                }
+            }
+        };
+        addUser();
+    });
 
     const validate = (values) => {
         const errors = {};
@@ -50,6 +92,11 @@ const AddUser = () => {
         }
         if(!values.address){
             errors.address = "Address is required";
+        }
+        if(!values.password){
+            errors.password = "Password is required";
+        }else if(values.password.length < 5) {
+            errors.password = "password must be more than 4 characters";
         }
         return errors;
     };
@@ -93,7 +140,26 @@ const AddUser = () => {
                         onChange={inputHandler}
                     />
                     <p className='error-message'>{formErrors.address}</p>
+                    <input 
+                        className='l-input'
+                        placeholder="Password" 
+                        name="password"
+                        value={formValues.password} 
+                        onChange={inputHandler}
+                    />
+                    <p className='error-message'>{formErrors.password}</p>
+
                     <button className='l-button' type="submit">Submit</button>
+
+                    <Snackbar 
+                        anchorOrigin={{ vertical: 'top',  horizontal: 'right' }}
+                        open={open} 
+                        autoHideDuration={3000} 
+                        onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                            User added successfully!
+                        </Alert>
+                    </Snackbar>
                 </form>
             </div>
         </div>

@@ -1,8 +1,11 @@
 import './login.css';
 import { useState, useEffect } from 'react';
+import { publicRequest } from '../../requestMethods';
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
 
+    const history = useHistory();
     const [formValues, setFormValues] = useState({
         email: '',
         password: '',
@@ -23,6 +26,26 @@ const Login = () => {
         setFormErrors(validate(formValues));
         setIsSubmit(true);
     };
+
+    useEffect( () => {
+
+        const login = async () => {
+            if(Object.keys(formErrors).length === 0 && isSubmit === true){
+                try{
+                    const {data} = await publicRequest.post("/auth/login", formValues);
+                    if(data) {
+                        localStorage.setItem("profile", JSON.stringify(data));
+                        setTimeout( () => {
+                            history.push("/home");
+                        }, 500); 
+                    }
+                } catch(err){
+                    setFormErrors({password: "wrong username or password"});
+                }
+            }
+        };
+        login();
+    });
 
     const validate = (values) => {
         const errors = {};
