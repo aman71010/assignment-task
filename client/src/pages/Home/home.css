@@ -1,0 +1,15 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    height: 70px;
+}
+
+.tab1, .tab2 {
+    font-size: 30px;
+    padding: 0 20px;
+}
